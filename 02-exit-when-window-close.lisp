@@ -4,13 +4,12 @@
   (let ((name (x::string->card8-vector atom-name)))
     (x:intern-atom-reply-atom (x:wait-reply (x:intern-atom client nil 0 (length name) name)))))
 
-
 (defun atom-to-data-buffer (atom)
   (let ((buf (x::make-buffer 4)))
-    (setf (aref buf 3) (ldb (byte 8 24) atom))
-    (setf (aref buf 2) (ldb (byte 8 16) atom))
-    (setf (aref buf 1) (ldb (byte 8 8) atom))
-    (setf (aref buf 0) (ldb (byte 8 0) atom))
+    (setf (aref buf 0) (ldb (byte 8 24) atom))
+    (setf (aref buf 1) (ldb (byte 8 16) atom))
+    (setf (aref buf 2) (ldb (byte 8 8) atom))
+    (setf (aref buf 3) (ldb (byte 8 0) atom))
     buf))
 
 
