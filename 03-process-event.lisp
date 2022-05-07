@@ -1,7 +1,7 @@
 (in-package :xclhb-samples)
 
-(defun event ()
-  (x:with-connected-client (client)
+(defun event (&optional host)
+  (x:with-connected-client (client host)
     (x:set-keycode-keysym-table client)
     (let* ((w-top (x:allocate-resource-id client))
            (w-l1 (x:allocate-resource-id client))
@@ -11,7 +11,7 @@
            (gc (x:allocate-resource-id client))
            (screen (elt (x:setup-roots (x:client-server-information client)) 0))
            (w-top-x 0) (w-top-y 0) (w-top-w 800) (w-top-h 600) (w-top-bg #xffffff)
-           (w-l1-x 100) (w-l1-y 300) (w-l1-w 300) (w-l1-h 300) (w-l1-bg #xffaaaa) 
+           (w-l1-x 100) (w-l1-y 300) (w-l1-w 300) (w-l1-h 300) (w-l1-bg #xffaaaa)
            (w-l2-x 100) (w-l2-y 0) (w-l2-w 200) (w-l2-h 100) (w-l2-bg #xff8888)
            (w-r1-x 400) (w-r1-y 300) (w-r1-w 300) (w-r1-h 300) (w-r1-bg #xaaaaff)
            (w-r2-x 0) (w-r2-y 0) (w-r2-w 200) (w-r2-h 200) (w-r2-bg #x8888ff)
@@ -30,7 +30,7 @@
                                                x:+event-mask--leave-window+)
                                   0 0 0))
                (draw-text (text y)
-                 (x:clear-area client 0 w-top 0 y w-top-w 20)
+                 (x:clear-area client 0 w-top  0 (- y 20) w-top-w 25)
                  (x:image-text8 client (length text) w-top gc 10 y
                                 (x::string->card8-vector text))
                  (x:flush client))

@@ -12,8 +12,8 @@
         (when visual-type
           (x:visualtype-visual-id visual-type))))))
 
-(defun show-transparent-window ()
-  (x:with-connected-client (client)
+(defun show-transparent-window (&optional host)
+  (x:with-connected-client (client host)
     (let* ((window (x:allocate-resource-id client))
            (c1 (x:allocate-resource-id client))
            (c2 (x:allocate-resource-id client))

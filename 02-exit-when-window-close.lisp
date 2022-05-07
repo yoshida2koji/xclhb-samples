@@ -35,8 +35,8 @@
       (funcall fn)
       (sleep delay-seconds))))
 
-(defun exit-when-window-close ()
-  (x:with-connected-client (client)
+(defun exit-when-window-close (&optional host)
+  (x:with-connected-client (client host)
     (let* ((window (x:allocate-resource-id client))
            (screen (elt (x:setup-roots (x:client-server-information client)) 0))
            )

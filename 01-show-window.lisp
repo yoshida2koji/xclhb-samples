@@ -1,7 +1,7 @@
 (in-package :xclhb-samples)
 
-(defun show-window ()
-  (x:with-connected-client (client)
+(defun show-window (&optional host)
+  (x:with-connected-client (client host)
     (let ((root (x:screen-root (elt (x:setup-roots (x:client-server-information client)) 0)))
           (wid (x:allocate-resource-id client)))
       (x:create-window client ; client
