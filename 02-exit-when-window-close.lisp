@@ -2,7 +2,8 @@
 
 (defun intern-atom-sync (client atom-name)
   (let ((name (x::string->card8-vector atom-name)))
-    (x:intern-atom-reply-atom (x:wait-reply (x:intern-atom client nil 0 (length name) name)))))
+    (x:intern-atom-reply-atom (x:wait-reply client
+                                            (lambda (cb) (x:intern-atom client cb 0 (length name) name))))))
 
 (defun atom-to-data-buffer (atom)
   (let ((buf (x::make-buffer 4)))
