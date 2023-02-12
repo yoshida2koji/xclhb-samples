@@ -3,7 +3,9 @@
   :version "0.1"
   :author "yoshida koji"
   :license "MIT"
-  :depends-on ("cffi" "xclhb" "xclhb-shm")
+  :depends-on ("cffi"
+               (:version "xclhb" "0.2")
+               (:version "xclhb-shm" "0.2"))
   :serial t
   :components ((:file "package")
                (:file "01-show-window")
