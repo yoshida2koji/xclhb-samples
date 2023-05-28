@@ -5,7 +5,7 @@
   :license "MIT"
   :depends-on ("cffi"
                (:version "xclhb" "0.2")
-               (:version "xclhb-shm" "0.2"))
+               "xclhb-shm")
   :serial t
   :components ((:file "package")
                (:file "01-show-window")

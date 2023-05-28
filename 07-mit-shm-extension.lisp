@@ -38,13 +38,13 @@
                    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
       (x:map-window client window)
       (shm:init client)
-      (shm:x-attach client shmseg (shm:shm-segment-id segment) 0)
+      (shm:attach client shmseg (shm:shm-segment-id segment) 0)
       (fill-rect segment width height 100 50 600 400 #xff0000)
       (x:set-event-handler client x:+expose-event+
                            (lambda (e)
                              (declare (ignore e))
-                             (shm:shm-put-image client window gc width height 0 0 width height
-                                                0 0 24 x:+image-format--zpixmap+ 0 shmseg 0)
+                             (shm:put-image client window gc width height 0 0 width height
+                                            0 0 24 x:+image-format--zpixmap+ 0 shmseg 0)
                              (x:flush client)))
       (x:set-default-error-handler client
                                    (lambda (e)

@@ -3,23 +3,14 @@
 (defun intern-atom-sync (client atom-name)
   (let ((name (x::string->card8-vector atom-name)))
     (x:intern-atom-reply-atom (x:wait-reply client
-                                            (lambda (cb) (x:intern-atom client cb 0 (length name) name))))))
-
-(defun atom-to-data-buffer (atom)
-  (let ((buf (x::make-buffer 4)))
-    (setf (aref buf 0) (ldb (byte 8 24) atom))
-    (setf (aref buf 1) (ldb (byte 8 16) atom))
-    (setf (aref buf 2) (ldb (byte 8 8) atom))
-    (setf (aref buf 3) (ldb (byte 8 0) atom))
-    buf))
-
+                                            (lambda (cb) (x:intern-atom client cb 0 (length name)  name))))))
 
 (defun set-on-window-close-function (client window fn)
   (let* ((atom-atom (intern-atom-sync client "ATOM"))
          (wm-protocols-atom (intern-atom-sync client "WM_PROTOCOLS"))
          (wm-delete-window-atom (intern-atom-sync client "WM_DELETE_WINDOW")))
     (x:change-property client 0 window wm-protocols-atom atom-atom 32 1
-                       (atom-to-data-buffer wm-delete-window-atom))
+                       (x:card32->card8-vector wm-delete-window-atom))
     (x:set-event-handler client x:+client-message-event+ fn)))
 
 (defun main-loop (client window fn &optional (delay-seconds 0.016))
