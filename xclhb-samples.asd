@@ -5,6 +5,7 @@
   :license "MIT"
   :depends-on ("cffi"
                (:version "xclhb" "0.2")
+               "xclhb-bigreq"
                "xclhb-shm")
   :serial t
   :components ((:file "package")
@@ -14,4 +15,5 @@
                (:file "04-transparent")
                (:file "05-basic-drawing")
                (:file "06-simple-paint")
-               (:file "07-mit-shm-extension")))
+               (:file "07-mit-shm-extension")
+               (:file "08-bigreq")))
