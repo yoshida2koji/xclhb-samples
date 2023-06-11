@@ -78,7 +78,7 @@
                              (lambda (e)
                                (declare (ignore e))
                                (setf updated-p t)))
-        (x:set-event-handler client (+ (x:extension-event-base client shm::+extension-name+) shm:+completion-event+)
+        (x:set-extension-event-handler client shm:+extension-name+ shm:+completion-event+
                              (lambda (e)
                                (declare (ignore e))
                                (setf put-image-complete-p t)))
@@ -102,4 +102,5 @@
                        (setf updated-p nil))))))))
 
 (export 'mit-shm-extension)
+
 
