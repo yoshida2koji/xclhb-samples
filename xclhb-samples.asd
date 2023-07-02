@@ -2,17 +2,7 @@
   :version "0.1"
   :author "yoshida koji"
   :license "MIT"
-  :depends-on ("cffi"
-               "opticl"
-               "cl-vectors"
-               "cl-paths-ttf"
-               "cl-aa-misc"
-               (:version "xclhb" "0.2")
-               "xclhb-bigreq"
-               "xclhb-shm"
-               "xclhb-render"
-               "size-limited-cache"
-               "ttf-alpha-mask")
+  :depends-on ((:version "xclhb" "0.2"))
   :serial t
   :components ((:file "package")
                (:file "01-show-window")
@@ -27,6 +17,7 @@
   :author "yoshida koji"
   :license "MIT"
   :depends-on ("xclhb-samples"
+               "cffi"
                "opticl"
                "cl-vectors"
                "cl-paths-ttf"
