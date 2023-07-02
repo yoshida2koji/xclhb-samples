@@ -1,4 +1,4 @@
-(in-package :xclhb-samples)
+(in-package :xclhb-samples/extensions)
 
 (defun clamp (n min max)
   (cond ((< n min) min)
@@ -85,7 +85,7 @@
         (x:set-default-error-handler client
                                      (lambda (e)
                                        (error "~a" e)))
-        (main-loop client window
+        (xs::main-loop client window
                    (lambda () 
                      (when (and put-image-complete-p (or (/= changed-width width) (/= changed-height height)))
                        (let ((current-time (current-seconds)))

@@ -21,3 +21,19 @@ run your Common Lisp implementation. (quicklisp is required)
 (xclhb-samples:basic-drawing)
 (xclhb-samples:simple-paint)
 ```
+
+extensions sample
+```sh
+cd ~/common-lisp
+git clone https://github.com/yoshida2koji/ttf-alpha-mask.git
+git clone https://github.com/yoshida2koji/size-limited-cache.git
+```
+
+
+```lisp
+(ql:quickload :xclhb-samples/extensions)
+(xclhb-samples/extensions:bigreq-sample)
+(xclhb-samples/extensions:mit-shm-extension)
+(xclhb-samples/extensions:render-sample-string {truetype-font-path})
+(xclhb-samples/extensions:render-sample-composite {background-file-path} {foreground-file-path})
+```
