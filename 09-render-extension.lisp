@@ -92,27 +92,28 @@
       (x:put-image client x:+image-format--zpixmap+ alpha-pixmap alpha-gc w h 0 0 0 8
                    (make-array (array-total-size alpha-image) :element-type 'x:card8 :displaced-to alpha-image))
       (render:create-picture client alpha-picture alpha-pixmap (find-picture-format-alpha client) 0 0 0 0 0 0 0 0 0 0 0 0 0 0))
-    (let ((render-image (make-render-image :width w
-                                           :height h
-                                           :pixmap pixmap
-                                           :alpha-pixmap alpha-pixmap
-                                           :picture picture
-                                           :alpha-picture alpha-picture)))
-      (tg:finalize render-image
-                   (lambda ()
-                     (when (x:client-open-p client)
-                       (x:free-pixmap client pixmap)
-                       (render:free-picture client picture)
-                       (when has-alpha-p
-                         (x:free-pixmap client alpha-pixmap)
-                         (render:free-picture client alpha-picture)))))
-      render-image)))
+    (make-render-image :width w
+                       :height h
+                       :pixmap pixmap
+                       :alpha-pixmap alpha-pixmap
+                       :picture picture
+                       :alpha-picture alpha-picture)))
 
 (defun free-render-image (client image)
-  (x:free-pixmap client (render-image-pixmap image))
-  (x:free-pixmap client (render-image-alpha-pixmap image))
-  (when (render-image-picture image) (render:free-picture client (render-image-picture image)))
-  (when (render-image-alpha-picture image) (render:free-picture client (render-image-alpha-picture image))))
+  (let ((pixmap (render-image-pixmap image))
+        (picture (render-image-picture image))
+        (alpha-pixmap (render-image-alpha-pixmap image))
+        (alpha-picture (render-image-alpha-picture image)))
+    (x:free-pixmap client pixmap)
+    (x:free-resource-id client pixmap)
+    (render:free-picture client picture)
+    (x:free-resource-id client picture)
+    (when alpha-pixmap
+      (x:free-pixmap client alpha-pixmap)
+      (x:free-resource-id client alpha-pixmap))
+    (when alpha-picture
+      (render:free-picture client alpha-picture)
+      (x:free-resource-id client alpha-picture))))
 
 (defun composite (client dst-picture render-image x y)
   (render:composite client
@@ -175,16 +176,10 @@
       (x:put-image client x:+image-format--zpixmap+ pixmap gc width height
                    0 0 0 8 (make-array (array-total-size mask) :element-type 'x:card8 :displaced-to mask))
       (render:create-picture client picture pixmap alpha-picture-foramt 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-      (let ((glyph (make-render-glyph :width width
-                                      :height height
-                                      :pixmap pixmap
-                                      :picture picture)))
-        (tg:finalize glyph
-                     (lambda ()
-                       (when (x:client-open-p client)
-                         (x:free-pixmap client pixmap)
-                         (render:free-picture client picture))))
-        glyph))))
+      (make-render-glyph :width width
+                         :height height
+                         :pixmap pixmap
+                         :picture picture))))
 
 (defun get-glyph (client gc font-loader cache-manager ch size alpha-picture-foramt)
   (let ((glyph (size-limited-cache:get-cache cache-manager (list font-loader ch size))))
@@ -193,7 +188,14 @@
              (size-limited-cache:add-cache cache-manager
                                            (list font-loader ch size)
                                            glyph
-                                           (* (render-glyph-width glyph) (render-glyph-height glyph)))
+                                           (* (render-glyph-width glyph) (render-glyph-height glyph))
+                                           (lambda ()
+                                             (let ((pixmap (render-glyph-pixmap glyph))
+                                                   (picture (render-glyph-picture glyph)))
+                                               (x:free-pixmap client pixmap)
+                                               (x:free-resource-id client pixmap)
+                                               (render:free-picture client picture)
+                                               (x:free-resource-id client picture))))
              glyph))))
 
 (defun render-glyph (client dst-picture glyph x y color-picture)
@@ -224,7 +226,7 @@
              (alpha-pixmap-dummy (x:allocate-resource-id client))
              (color-pixmap (x:allocate-resource-id client))
              (color-picture (x:allocate-resource-id client))
-             (cache-manager (size-limited-cache:create-cache-manager :max-size (* 1024 1024)))
+             (cache-manager (size-limited-cache:create-cache-manager :max-size (* 1024 100)))
              (font-size 0)
              (alpha-picture-foramt (find-picture-format-alpha client)))
         (x:create-window client root-depth window root 0 0 800 600 0 0 0
